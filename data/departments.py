@@ -14,15 +14,3 @@ class Department(SqlAlchemyBase):
     email = sa.Column(sa.String, unique=True, nullable=False)
 
     chief_user = relationship('User', backref='departments_chief', foreign_keys=[chief])
-
-    @property
-    def members_list(self):
-        if not self.members:
-            return []
-        from data.db_session import create_session
-        session = create_session()
-        ids = [int(i) for i in self.members.split(',') if i.strip().isdigit()]
-        return session.query(User).filter(User.id.in_(ids)).all()
-
-    def __repr__(self):
-        return f'<Department> {self.id} {self.title}'
